@@ -1,0 +1,72 @@
+import random
+import matplotlib.pyplot as plt
+
+number_of_simulations = 10000
+size_of_simulation = 10
+
+def simulate_heads_tails(num):
+  num_heads = 0
+  for i in range(num):
+    if random.randint(1,2)== 1:
+      num_heads += 1
+  return num_heads
+
+def factorial(n):
+  if n == 0:
+    return 1
+  return n * factorial(n-1)
+
+def choose(a,b):
+  divisor = factorial(b) * factorial(a - b)
+  return factorial(a) / divisor
+
+def create_list(size):
+  possible_heads = []
+  for i in range(size+1):
+    possible_heads.append(i)
+  return possible_heads
+
+def run_simulations(num,size):
+  simulated_list = []
+  for i in range(size+1):
+    simulated_list.append(0)
+  for i in range(num):  
+    num_heads = simulate_heads_tails(size)
+    simulated_list[num_heads] += 1
+  return simulated_list
+
+def get_distribution(size):
+  answers = []
+  for i in range(size+1):
+    answer = choose(size ,i)
+    answers.append(answer)
+  return answers
+
+def get_expected_list(num,size):
+  distribution = get_distribution(size)
+  expected_list = []
+  combinations = 2**size
+  multiplier = num / combinations
+  for i in range(size+1):
+    expected_list.append(distribution[i] * multiplier)
+  return expected_list
+
+possible_heads = create_list(size_of_simulation)
+print("possible_heads - ", create_list(size_of_simulation))
+
+simulated_list = run_simulations(number_of_simulations, size_of_simulation)
+print("simulated list - ", simulated_list)
+
+expected_list = get_expected_list(number_of_simulations, size_of_simulation)
+print("expected list - ", expected_list)
+print
+
+plt.bar(possible_heads, simulated_list)
+plt.savefig("Coin_flip_simulated_10,000_times.png")
+plt.show()
+plt.close()
+
+plt.bar(possible_heads, expected_list)
+plt.savefig("Coin_flip_expected_10,000_times.png")
+plt.show()
+plt.close()
